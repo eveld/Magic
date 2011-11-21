@@ -12,7 +12,7 @@ def findCards(soup):
 	cards = soup.findAll("tr", "searchrow")
 	for card in cards:
 		name = card.find("a", "kaartnaam").string.replace("&rsquo;", "'")
-		price = card.findAll("td")[2].b.string.replace("&euro; ", "$").replace(",", ".")
+		price = card.findAll("td")[2].b.string.replace("&euro; ", "").replace(",", ".")
 
 		# Check if the card should be allowed (non basic land / token)
 		if store.filter_card(name):

@@ -16,7 +16,7 @@ def findCards(soup):
 		
 		# Remove the double faced card names
 		name = re.sub(r"/.*$", "", card.a.string).strip()
-		price = card.find("td", "price", recursive=True).string.strip()
+		price = card.find("td", "price", recursive=True).string.strip()[1:]
 		
 		# Check if the card should be allowed (non basic land / token)
 		if store.filter_card(name):

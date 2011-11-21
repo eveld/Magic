@@ -15,7 +15,7 @@ def findCards(soup):
 	for card in cards:
 		# Remove the double faced card names
 		name = re.sub(r"/.*$", "", card.findAll("td")[2].h3.a.string).strip()
-		price = "$" + card.findAll("td")[5].text.replace("EUR... more info", "")
+		price = card.findAll("td")[5].text.replace("EUR... more info", "")
 		
 		# Check if the card should be allowed (non basic land / token)
 		if store.filter_card(name):

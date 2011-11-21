@@ -3,6 +3,8 @@ from BeautifulSoup import BeautifulSoup
 import urllib
 import re
 
+import store
+
 # Url to parse
 url = "http://www.magiccardmarket.eu/?mainPage=browseCategory&idCategory=1&idExpansion=1327&resultsPage="
 
@@ -11,8 +13,14 @@ def findCards(soup):
 	cards = soup.find("form", attrs={"name": "filterForm"}).findNextSibling("table").find("th", "col_price").parent.parent.findAll("tr", {"class": ["odd", "even"]})
 	for card in cards:
 		name = card.findAll("td")[2].a.string
-		price = "$" + card.findAll("td")[6].string.replace(" &#x20AC;", "").replace(",", ".")
-		print(price + " = " + name)
+		price = card.findAll("td")[6].string.replace(" &#x20AC;", "").replace(",", ".")
+		# Check if the card should be allowed (non basic land / token)
+		if store.filter_card(name):
+			# Add the card to the store
+			store.add_card(name, "", "")
+			store.add_price(name, "Innistrad", "MagicCardMarket", price)
+		else:
+			print("Ignoring %s" % name)
 
 # Download the page
 def read(url):

@@ -3,6 +3,8 @@ from BeautifulSoup import BeautifulSoup
 import urllib
 import re
 
+import store
+
 # Url to parse
 url = "http://sales.starcitygames.com/category.php?cat=5215&start="
 
@@ -10,10 +12,19 @@ def findCards(soup):
 	# All cards in the list
 	cards = soup.findAll("tr", {"class": ["deckdbbody", "deckdbbody2"]})
 	for card in cards:
-		name = re.compile("\"[.]*>(.*)", re.DOTALL).findall(card.findAll("td")[0].find("a").text)[0].strip()
-		price = card.findAll(text=re.compile("\$(.*)", re.DOTALL))
-		if len(price) > 0:
-			print(price[0] + " = " + name)
+		field = card.findAll("td")[0].find("a")
+		if field is not None:
+			temp = re.compile("\"[.]*>(.*)", re.DOTALL).findall(field.text)[0].strip()
+			name = re.sub(r"\|.*$", "", temp).strip()
+			price = card.findAll(text=re.compile("\$(.*)", re.DOTALL))
+			if len(price) > 0:
+				# Check if the card should be allowed (non basic land / token)
+				if store.filter_card(name):
+					# Add the card to the store
+					store.add_card(name, "", "")
+					store.add_price(name, "Innistrad", "StarCityGames", price[0][1:])
+				else:
+					print("Ignoring %s" % name)
 
 # Download the page
 def read(url):

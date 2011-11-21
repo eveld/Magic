@@ -1,6 +1,9 @@
 from BeautifulSoup import BeautifulSoup
 
 import urllib
+import re
+
+import store
 
 # Url to parse
 url = "http://www.magicunited.nl/sets/innistrad/?batch_offset="
@@ -9,9 +12,17 @@ def findCards(soup):
 	# All cards in the list
 	cards = soup.find("div", id="content-binnen").tbody.findAll("tr")
 	for card in cards:
-		name = card.findAll("td")[0].find("a", text=True)
+		temp = re.sub(r"/.*$", "", card.findAll("td")[0].find("a", text=True)).strip()
+		name = re.sub(r".\(M\)", "", temp).strip()
+		
 		price = card.findAll("td")[3].string[2:].replace(",", ".")
-		print(price + " = " + name)
+		# Check if the card should be allowed (non basic land / token)
+		if store.filter_card(name):
+			# Add the card to the store
+			store.add_card(name, "", "")
+			store.add_price(name, "Innistrad", "MagicUnited", price)
+		else:
+			print("Ignoring %s" % name)
 
 # Download the page
 def read(url):
