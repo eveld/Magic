@@ -5,12 +5,14 @@ r = redis.Redis("localhost")
 
 # Seriously get a little more consistent please ;P
 ignore = [
-"Wolf Token (A)", "Wolf Token (B)", "Wolf token (A)", "Wolf token (B)", "Checklist DFC", "Checklist card",
+"Wolf Token (A)", "Wolf Token (B)", "Wolf token (A)", "Wolf token (B)", 
+"Checklist DFC", "Checklist card", "Double-Sided Card Checklist",
 "Angel token", "Demon token", "Ooze token", "Spider token", "Spirit token", "Vampire token", "Homunculus token",
 "Angel Token", "Demon Token", "Ooze Token", "Spider Token", "Spirit Token", "Vampire Token", "Homunculus Token",
 "Angel token (4/4)", "Demon token (5/5)", "Homunculus token (2/2)", "Ooze token (*/*)", "Spider token (1/2)",
 "Spirit token (1/1)", "Vampire token (2/2)", "Zombie token (1) (2/2)", "Zombie token (2) (2/2)", "Zombie token (3) (2/2)",
 "Wolf token (1) (1/1)", "Wolf token (2) (2/2)", "Wolf Token (Black)",
+"Zombie Token A", "Zombie Token B", "Zombie Token C", "Wolf Token (Green)",
 "Swamp", "Swamp (A)", "Swamp (B)", "Swamp (C)", "Swamp 256", "Swamp 257", "Swamp 258",
 "Swamp (256)", "Swamp (257)", "Swamp (258)",
 "Swamp (1)", "Swamp (2)", "Swamp (3)",
@@ -65,16 +67,3 @@ def add_price(name, block, shop, price):
 			print("+ PRICE: %s ( %s @ %s)" % (name, shop, price))	
 			return True
 		return False
-		
-#add_card("Snapcaster Mage", "Creature", ["Blue"], ["1"])
-#add_card("Skaab Ruinator", "Creature", ["Blue"], ["1"])
-
-#print(r.hget("card:1", "name"))
-#print(r.hvals("price:1:1:20111121"))
-#print(r.smembers("cards"))
-#print(r.hget("price:1:1:20111121", "1"))
-#print(r.smembers("prices"))
-
-#print(delete_card("1"))
-
-#add_price("1", "1", "2", 3.15)
