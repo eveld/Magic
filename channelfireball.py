@@ -1,5 +1,8 @@
 from BeautifulSoup import BeautifulSoup
 import urllib
+import re
+
+import store
 
 # Url to parse
 url = "http://store.channelfireball.com/buylist/innistrad/616?filter[256]=Regular&filtered=1&page="
@@ -9,18 +12,34 @@ def findCards(soup):
 	products = soup.findAll("div", "product_grid")
 	for product in products:
 		#image = product.find("a", "thumbnail")["href"]
-		name = product.find("div", "name").a.string
-		price = product.find("span", "price", recursive=True).string
-		#print(price.strip() + ' = ' + name)
+		name = re.sub(r"/.*$", "", product.find("div", "name").a.string).strip()
+		price = product.find("span", "price", recursive=True).string.strip()
+		
+		# Check if the card should be allowed (non basic land / token)
+		if store.filter_card(name):
+			# Add the card to the store
+			store.add_card(name, "", "")
+			store.add_price(name, "Innistrad", "ChannelFireball", price)
+		else:
+			print("Ignoring %s" % name)
 		
 	# All cards in the list
 	products = soup.findAll("tr", "product_row")
 	for product in products:
 		#image = product.find("a", "thumbnail")["href"]
 		card = product.findAll("td")[1]
-		name = card.a.string
-		price = card.find("td", "price", recursive=True).string
-		#print(price.strip() + ' = ' + name)
+		
+		# Remove the double faced card names
+		name = re.sub(r"/.*$", "", card.a.string).strip()
+		price = card.find("td", "price", recursive=True).string.strip()
+		
+		# Check if the card should be allowed (non basic land / token)
+		if store.filter_card(name):
+			# Add the card to the store
+			store.add_card(name, "", "")
+			store.add_price(name, "Innistrad", "ChannelFireball", price)
+		else:
+			print("Ignoring %s" % name)
 
 # Download the page
 def read(url):
