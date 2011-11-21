@@ -10,7 +10,7 @@ ignore = [
 "Angel Token", "Demon Token", "Ooze Token", "Spider Token", "Spirit Token", "Vampire Token", "Homunculus Token",
 "Angel token (4/4)", "Demon token (5/5)", "Homunculus token (2/2)", "Ooze token (*/*)", "Spider token (1/2)",
 "Spirit token (1/1)", "Vampire token (2/2)", "Zombie token (1) (2/2)", "Zombie token (2) (2/2)", "Zombie token (3) (2/2)",
-"Wolf token (1) (1/1)", "Wolf token (2) (2/2)",
+"Wolf token (1) (1/1)", "Wolf token (2) (2/2)", "Wolf Token (Black)",
 "Swamp", "Swamp (A)", "Swamp (B)", "Swamp (C)", "Swamp 256", "Swamp 257", "Swamp 258",
 "Swamp (256)", "Swamp (257)", "Swamp (258)",
 "Swamp (1)", "Swamp (2)", "Swamp (3)",
@@ -32,7 +32,7 @@ def add_card(name, type, color):
 	#id = r.scard("cards") + 1
 	
 	if r.sadd("cards", name):
-		print("\n+ CARD: %s (%s %s)\n" % (name, type, color))
+		print("* CARD: %s (%s %s)" % (name, type, color))
 		r.hset("card:%s" % id, "type", type)
 		r.hset("card:%s" % id, "color", color)
 		return True
