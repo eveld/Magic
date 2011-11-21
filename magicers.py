@@ -3,6 +3,8 @@ from BeautifulSoup import BeautifulSoup
 import urllib
 import re
 
+import store
+
 # Url to parse
 url = "http://www.magicers.nl/webshop/innistrad_"
 
@@ -12,7 +14,14 @@ def findCards(soup):
 	for card in cards:
 		name = card.find("span", "shadow").string
 		price = card.find("div", "list_price_right_middle").text.replace("&#8364;", "$").replace(",", ".")
-		print(price + " = " + name)
+		
+		# Check if the card should be allowed (non basic land / token)
+		if store.filter_card(name):
+			# Add the card to the store
+			store.add_card(name, "", "")
+			store.add_price(name, "Innistrad", "Magicers", price)
+		else:
+			print("Ignoring %s" % name)
 
 # Download the page
 def read(url):

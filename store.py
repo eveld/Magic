@@ -3,45 +3,50 @@ import datetime
 
 r = redis.Redis("localhost")
 
-def add_card(name, types, colors, blocks):
-	id = r.scard("cards") + 1
+ignore = ["Wolf Token (A)", "Wolf Token (B)", 
+		  "Angel token", "Demon token", "Ooze token", "Spider token", "Spirit token", "Vampire token",
+		  "Swamp", "Swamp (A)", "Swamp (B)", "Swamp (C)", "Swamp 256", "Swamp 257", "Swamp 258",
+		  "Plains", "Plains (A)", "Plains (B)", "Plains (C)", "Plains 250", "Plains 251", "Plains 252",
+		  "Mountain", "Mountain (A)", "Mountain (B)", "Mountain (C)", "Mountain 259", "Mountain 260", "Mountain 261",
+		  "Island", "Island (A)", "Island (B)", "Island (C)", "Island 253", "Island 254", "Island 255",
+		  "Forest", "Forest (A)", "Forest (B)", "Forest (C)", "Forest 262", "Forest 263", "Forest 264"]
+
+def add_card(name, type, color):
+	#id = r.scard("cards") + 1
 	
-	print("Adding new card: %s - %s, %s from %s in slot %s" % (name, types, colors, blocks, id))
+	if r.sadd("cards", name):
+		print("Adding new card: %s ( %s %s)" % (name, type, color))
+		r.hset("card:%s" % id, "type", type)
+		r.hset("card:%s" % id, "color", color)
+		return True
+	else:
+		return False
+
+def filter_card(name):
+	if name in ignore:
+		return False
+	else:
+		return True
 	
-	if r.sadd("cards", id):
-		r.hset("card:%s" % id, "name", name)
-		r.hset("card:%s" % id, "types", types)
-		r.hset("card:%s" % id, "colors", colors)
-		r.hset("card:%s" % id, "blocks", blocks)
+def delete_card(name):
+	if name in r.smembers("cards"):
+		r.srem("cards", name)
+		r.delete("card:%s" % name)
 		return True
 	else:
 		return False
 		
-def delete_card(id):
-	if id in r.smembers("cards"):
-		r.srem("cards", id)
-		r.delete("card:%s" % id)
-		return True
-	else:
-		return False
-		
-def add_price(card, block, shop, price):
+def add_price(name, block, shop, price):
 	now = datetime.datetime.now().strftime("%Y%m%d")
-	if r.sadd("prices", "%s:%s:%s" % (card, block, now)):
-		
-		print("price:%s:%s:%s" % (card, block, now))
-		print("%s" % shop)
-		print(price)
-		
-		r.hset("price:%s:%s:%s" % (card, block, now), "%s" % shop, price)
+	
+	if r.sadd("prices", "%s:%s:%s" % (name, block, now)):
+		r.hset("price:%s:%s:%s" % (name, block, now), "%s" % shop, price)
+		print("Adding new price: %s ( %s @ %s)" % (name, shop, price))
 		return True
 	else:
-		if r.hset("price:%s:%s:%s" % (card, block, now), "%s" % shop, price):
-			print("price:%s:%s:%s" % (card, block, now))
-			print("%s" % shop)
-			print(price)
+		if r.hset("price:%s:%s:%s" % (name, block, now), "%s" % shop, price):
+			print("Adding new price: %s ( %s @ %s)" % (name, shop, price))	
 			return True
-		
 		return False
 		
 #add_card("Snapcaster Mage", "Creature", ["Blue"], ["1"])

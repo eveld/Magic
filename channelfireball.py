@@ -11,7 +11,7 @@ def findCards(soup):
 		#image = product.find("a", "thumbnail")["href"]
 		name = product.find("div", "name").a.string
 		price = product.find("span", "price", recursive=True).string
-		print(price.strip() + ' = ' + name)
+		#print(price.strip() + ' = ' + name)
 		
 	# All cards in the list
 	products = soup.findAll("tr", "product_row")
@@ -20,7 +20,7 @@ def findCards(soup):
 		card = product.findAll("td")[1]
 		name = card.a.string
 		price = card.find("td", "price", recursive=True).string
-		print(price.strip() + ' = ' + name)
+		#print(price.strip() + ' = ' + name)
 
 # Download the page
 def read(url):

@@ -2,6 +2,9 @@ from BeautifulSoup import BeautifulSoup
 
 import urllib
 import math
+import re
+
+import store
 
 # Url to parse
 url = "http://www.dragonbreath.nl/index.php?main_page=index&cPath=149_176_434&sort=2a&page="
@@ -10,9 +13,17 @@ def findCards(soup):
 	# All cards in the list
 	cards = soup.findAll("tr", {"class": ["productListing-odd", "productListing-even"]})
 	for card in cards:
-		name = card.findAll("td")[2].h3.a.string
+		# Remove the double faced card names
+		name = re.sub(r"/.*$", "", card.findAll("td")[2].h3.a.string).strip()
 		price = "$" + card.findAll("td")[5].text.replace("EUR... more info", "")
-		print(price + " = " + name)
+		
+		# Check if the card should be allowed (non basic land / token)
+		if store.filter_card(name):
+			# Add the card to the store
+			store.add_card(name, "", "")
+			store.add_price(name, "Innistrad", "DragonBreath", price)
+		else:
+			print("Ignoring %s" % name)
 
 # Download the page
 def read(url):
