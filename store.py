@@ -3,7 +3,7 @@ import datetime
 
 r = redis.Redis("localhost")
 
-ignore = ["Wolf Token (A)", "Wolf Token (B)", 
+ignore = ["Wolf Token (A)", "Wolf Token (B)", "Wolf token (A)", "Wolf token (B)",
 		  "Angel token", "Demon token", "Ooze token", "Spider token", "Spirit token", "Vampire token",
 		  "Swamp", "Swamp (A)", "Swamp (B)", "Swamp (C)", "Swamp 256", "Swamp 257", "Swamp 258",
 		  "Plains", "Plains (A)", "Plains (B)", "Plains (C)", "Plains 250", "Plains 251", "Plains 252",
