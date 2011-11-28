@@ -13,7 +13,7 @@ def findCards(soup):
 	cards = soup.findAll("div", "list_option")
 	for card in cards:
 		name = card.find("span", "shadow").string
-		price = card.find("div", "list_price_right_middle").text.replace("&#8364;", "$").replace(",", ".")
+		price = card.find("div", "list_price_right_middle").text.replace("&#8364;", "").replace(",", ".")
 		
 		# Check if the card should be allowed (non basic land / token)
 		if store.filter_card(name):
